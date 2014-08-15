@@ -29,7 +29,7 @@ public class SoleActivity extends ActionBarActivity implements GameFragment.Call
 		initFragments();
 		
 		showGame();
-		showControls();
+		//showControls();
 	}
 	
 	public void initFragments()
