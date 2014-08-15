@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -30,7 +29,7 @@ public class SoleActivity extends ActionBarActivity implements GameFragment.Call
 		initFragments();
 		
 		showGame();
-		//showControls();
+		showControls();
 	}
 	
 	public void initFragments()
@@ -74,17 +73,20 @@ public class SoleActivity extends ActionBarActivity implements GameFragment.Call
 	
 	public void showGame()
 	{
-		this.getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, this.game).commit();
+		if (!this.game.isAdded())
+			this.getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, this.game).commit();
 	}
 	
 	public void showControls()
 	{
-		this.getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, this.control).commit();
+		if (!this.control.isAdded())
+			this.getSupportFragmentManager().beginTransaction().add(R.id.fragment_holder, this.control).commit();
 	}
 	
 	public void hideControls()
 	{
-		this.getSupportFragmentManager().beginTransaction().remove(this.control).commit();
+		if (this.control.isAdded())
+			this.getSupportFragmentManager().beginTransaction().remove(this.control).commit();
 	}
 	
 	@Override

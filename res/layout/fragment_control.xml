@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:grid="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
@@ -14,69 +15,68 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             grid:columnCount="3"
             grid:rowCount="3" >
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_nw"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="n" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_up_left"
+                android:scaleType="fitCenter"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_n"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="u" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_up" 
+                android:scaleType="fitCenter"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_ne"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="n" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_up_right"
+                android:scaleType="fitCenter"/>
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_w"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="u" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_left"
+                android:scaleType="fitCenter" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_e"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="u" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_right"
+                android:scaleType="fitCenter" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_sw"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="n" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_down_left"
+                android:scaleType="fitCenter" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_s"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="u" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_down"
+                android:scaleType="fitCenter" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/b_se"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="n" />
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/a_down_right"
+                android:scaleType="fitCenter" />
         </android.support.v7.widget.GridLayout>
 
         <android.support.v7.widget.GridLayout

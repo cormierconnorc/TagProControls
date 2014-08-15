@@ -2,8 +2,6 @@ package com.connorsapps.tagprowrapper;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -11,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 public class ControlFragment extends Fragment
 {
@@ -31,8 +30,8 @@ public class ControlFragment extends Fragment
 	
 	public void setupButtons()
 	{		
-		//Set the listeners for the buttons
-		Button bNw = (Button)root.findViewById(R.id.b_nw);
+		//Set the listeners for the ImageButtons
+		ImageButton bNw = (ImageButton)root.findViewById(R.id.b_nw);
 		bNw.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -53,7 +52,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bN = (Button)root.findViewById(R.id.b_n);
+		ImageButton bN = (ImageButton)root.findViewById(R.id.b_n);
 		bN.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -72,7 +71,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bNe = (Button)root.findViewById(R.id.b_ne);
+		ImageButton bNe = (ImageButton)root.findViewById(R.id.b_ne);
 		bNe.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -93,7 +92,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bE = (Button)root.findViewById(R.id.b_e);
+		ImageButton bE = (ImageButton)root.findViewById(R.id.b_e);
 		bE.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -112,7 +111,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bSe = (Button)root.findViewById(R.id.b_se);
+		ImageButton bSe = (ImageButton)root.findViewById(R.id.b_se);
 		bSe.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -133,7 +132,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bS = (Button)root.findViewById(R.id.b_s);
+		ImageButton bS = (ImageButton)root.findViewById(R.id.b_s);
 		bS.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -152,7 +151,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bSw = (Button)root.findViewById(R.id.b_sw);
+		ImageButton bSw = (ImageButton)root.findViewById(R.id.b_sw);
 		bSw.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -173,7 +172,7 @@ public class ControlFragment extends Fragment
 			}
 		});
 		
-		Button bW = (Button)root.findViewById(R.id.b_w);
+		ImageButton bW = (ImageButton)root.findViewById(R.id.b_w);
 		bW.setOnTouchListener(new TemplateTouchListener()
 		{
 			
@@ -273,6 +272,48 @@ public class ControlFragment extends Fragment
 		overlay.setOnTouchListener(new View.OnTouchListener()
 		{			
 			View curTouchView;
+			
+			private boolean checkTriangleContains(float[] triX, float[] triY, float pX, float pY)
+			{
+				//Check contains using Barycentric coordinates
+				float area = 0.5f * (-triY[1] * triX[2] + triY[0] * (-triX[1] + triX[2]) + triX[0] * (triY[1] - triY[2]) + triX[1] * triY[2]);
+				
+				float s = 1.0f / (2 * area) * (triY[0] * triX[2] - triX[0] * triY[2] + (triY[2] - triY[0]) * pX + (triX[0] - triX[2]) * pY);
+				float t = 1.0f / (2 * area) * (triX[0] * triY[1] - triY[0] * triX[1] + (triY[0] - triY[1]) * pX + (triX[1] - triX[0]) * pY);
+				
+				return (s <= 1 && s >= 0) && (t <= 1 && t >= 0) && (s + t <= 1);
+			}
+			
+			private boolean checkTriangularPaths(ViewGroup group, View child, float tX, float tY)
+			{
+				//Make sure this is the control grid and a button
+				if (!(group.getId() == R.id.button_grid && (child instanceof Button || child instanceof ImageButton)))
+					return false;
+				
+				//Center point of grid
+				float xCent = (float)group.getWidth() / 2;
+				float yCent = (float)group.getHeight() / 2;
+				
+				float cX = child.getX();
+				float cY = child.getY();
+				
+				//All vertices
+				float[] xLocs = {cX, cX, cX + child.getWidth(), cX + child.getWidth()};
+				float[] yLocs = {cY, cY + child.getHeight(), cY, cY + child.getHeight()};
+				
+				for (int vOneIndex = 0; vOneIndex < xLocs.length; vOneIndex++)
+					for (int vTwoIndex = vOneIndex + 1; vTwoIndex < xLocs.length; vTwoIndex++)
+					{
+						//Construct a triangle
+						float[] xVerts = {xLocs[vOneIndex], xLocs[vTwoIndex], xCent};
+						float[] yVerts = {yLocs[vOneIndex], yLocs[vTwoIndex], yCent};
+						
+						if (checkTriangleContains(xVerts, yVerts, tX, tY))
+							return true;
+					}
+				
+				return false;
+			}
 
 			private View findChildRecurse(ViewGroup group, float x, float y)
 			{	
@@ -282,7 +323,9 @@ public class ControlFragment extends Fragment
 
 					if (x >= child.getX() && y >= child.getY()
 							&& y <= (child.getY() + child.getHeight())
-							&& x <= (child.getX() + child.getWidth()))
+							&& x <= (child.getX() + child.getWidth())
+							//Special handling for control grid
+							|| checkTriangularPaths(group, child, x, y))
 					{
 						//Only allow player to click visible children
 						if (child.getVisibility() != View.VISIBLE)
